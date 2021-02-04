@@ -143,6 +143,7 @@ public class App extends JFrame {
         return menuBar;
     }
 
+    // Method to perform a two-column query
     private Map<String, Double> runQuery(String q) {
         Map<String, Double> results = new HashMap<>();
         try {
