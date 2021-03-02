@@ -5,6 +5,13 @@
             "name": "Launch App",
             "request": "launch",
             "mainClass": "App",
+            "projectName": "Parallel-Coords_c86cee3c"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
             "projectName": "Bar-Line-Charts_33bb890c"
         },
         {

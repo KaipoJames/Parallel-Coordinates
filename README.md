@@ -1,13 +1,17 @@
-## Getting Started
+## NOTES
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+QUERIES:
+ - The ResultSetMetaData class is used to get all the column names of table.
+ - getMetaData(), initial method to get access to data
+ - getColumnCount(), get the number of columns in ResultSet
+ - Create a new class to store the data from the column
+   - String columnName
+   - //Type (string, number?)
+   - ArrayList of data
 
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+ - SQL Statements:
+   - `Select * FROM cis2012`
+   - `Select * FROM cis2019`
 
 ## Dependency Management
 
