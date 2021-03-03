@@ -81,8 +81,7 @@ public class App {
             ResultSetMetaData md = rs.getMetaData();
             int numColumns = md.getColumnCount();
             for (int i = 1; i <= numColumns; i++) {
-                Axis seth = new Axis(md.getColumnName(i));
-                seth.assignType(md.getColumnTypeName(i));
+                Axis seth = new Axis(md.getColumnName(i), md.getColumnTypeName(i));
                 axes.add(seth);
             }
             System.out.println("Axes Length: " + axes.size());

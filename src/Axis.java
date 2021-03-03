@@ -9,13 +9,14 @@ import java.util.Set;
 
 public class Axis {
     String columnName;
-    String type;
+    String columnType;
     ArrayList<Object> data;
     ArrayList<Number> relativeData;
     private Line2D.Double geometry;
 
-    public Axis(String name) {
+    public Axis(String name, String type) {
         columnName = name;
+        columnType = this.assignType(type);
         data = new ArrayList<>();
     }
 
@@ -49,12 +50,12 @@ public class Axis {
         return new Point2D.Double(geometry.x1, y + 25);
     }
 
-    public void assignType(String columnTypeName) {
+    public String assignType(String columnTypeName) {
         if (columnTypeName.equalsIgnoreCase("numeric") || columnTypeName.equalsIgnoreCase("int4")
                 || columnTypeName.equalsIgnoreCase("float8")) {
-            this.type = "Double";
+            return "Double";
         } else {
-            this.type = "String";
+            return "String";
         }
     }
 
