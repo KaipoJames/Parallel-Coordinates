@@ -29,7 +29,9 @@ public class Polyline implements Serializable, Comparable<Polyline> {
     }
 
     public void addPoint(final Point2D p) {
-        addPoint(p.getX(), p.getY());
+        double xPos = p.getX();
+        double yPos = p.getY();
+        addPoint(xPos, yPos);
     }
 
     public void addPoint(final Double x, final Double y) {

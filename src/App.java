@@ -32,7 +32,7 @@ public class App {
         mainPanel = new Vis();
         frame.setContentPane(mainPanel);
 
-        frame.setSize(1000, 450);
+        frame.setSize(1100, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Parallel Coordinates");
         frame.setVisible(true);
@@ -82,6 +82,7 @@ public class App {
             int numColumns = md.getColumnCount();
             for (int i = 1; i <= numColumns; i++) {
                 Axis seth = new Axis(md.getColumnName(i));
+                seth.assignType(md.getColumnTypeName(i));
                 axes.add(seth);
             }
             System.out.println("Axes Length: " + axes.size());
