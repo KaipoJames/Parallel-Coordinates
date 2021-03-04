@@ -3,8 +3,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 import javax.swing.JPanel;
 import java.util.*;
@@ -27,128 +26,48 @@ public class Vis extends JPanel {
         repaint();
     }
 
-    public void getColumnData(Graphics2D g) {
-        System.out.println("\nDATA:");
-        for (Axis a : axes) {
-            System.out.println("\nColumn: " + a.columnName);
-            var data = a.data;
-            if (data.get(0) instanceof Integer) {
-                System.out.println("Array Of Integers");
-                ArrayList<Double> values = getIntLabels(data);
-                for (Double d : values) {
-                    System.out.println(d);
-                }
-            } else if (data.get(0) instanceof BigDecimal) {
-                // Convert BigDecimal values into Doubles
-                for (int i = 0; i < data.size(); i++) {
-                    BigDecimal bg = (BigDecimal) data.get(i);
-                    double item = bg.doubleValue();
-                    data.remove(data.get(i));
-                    data.add(item);
-                }
-                System.out.println("Array Of BigDecimal");
-                ArrayList<Double> values = getIntLabels(data);
-                for (Double d : values) {
-                    System.out.println(d);
-                }
-            } else if (data.get(0) instanceof Double) {
-                System.out.println("Array Of Double");
-                ArrayList<Double> values = getIntLabels(data);
-                for (Double d : values) {
-                    System.out.println(d);
-                }
-            } else if (data.get(0) instanceof String) {
-                System.out.println("Array Of String");
-                for (Object d : data) {
-                    String value = d.toString();
-                    System.out.println(value);
-                }
-            } else {
-                System.out.println("TYPE: " + ((Object) data.get(0)).getClass().getName());
-            }
-            for (Object d : data) {
-                // System.out.println(d + ". TYPE: " + ((Object) d).getClass().getName());
+    private double getMax(ArrayList<Object> list) {
+        double max = 0;
+        for (Object in : list) {
+            String val = in.toString();
+            Double db = Double.valueOf(val);
+            if (db > max) {
+                max = db;
             }
         }
+        return max;
     }
 
-    private ArrayList<Double> getIntLabels(ArrayList<Object> list) {
-        ArrayList<Double> values = new ArrayList<Double>();
-        double max = 0;
+    private double getMin(ArrayList<Object> list) {
         double min = 0;
-        if (list.get(0) instanceof BigDecimal) {
-            for (int i = 0; i < list.size(); i++) {
-                BigDecimal bg = (BigDecimal) list.get(i);
-                if (bg.doubleValue() > max) {
-                    max = (int) i;
-                }
-            }
-        } else if (list.get(0) instanceof Double) {
-            for (int i = 0; i < list.size(); i++) {
-                Double db = (Double) list.get(i);
-                if (db > max) {
-                    max = (int) i;
-                }
-            }
-        } else {
-            for (Object i : list) {
-                if ((int) i > max) {
-                    max = (int) i;
-                }
-            }
-        }
+        String val = list.get(0).toString();
+        min = Double.valueOf(val);
         int index = 0;
         while (index < list.size()) {
-            if ((double) list.get(index) < min) {
-                min = (double) list.get(index);
+            String st = list.get(index).toString();
+            double db = Double.valueOf(st);
+            if (db < min) {
+                min = db;
             }
             index++;
         }
-        double middle = (max + min) / 2;
-        double second = (min + middle) / 2;
-        double fourth = (middle + max) / 2;
-        values.add(max);
-        values.add(fourth);
-        values.add(middle);
-        values.add(second);
-        values.add(min);
-        return values;
+        return min;
     }
 
-    private ArrayList<Double> getBDLabels(ArrayList<BigDecimal> list) {
+    private ArrayList<Double> getDoubleLabels(ArrayList<Object> list) {
+        DecimalFormat df = new DecimalFormat("###.##");
         ArrayList<Double> values = new ArrayList<Double>();
-        double max = Collections.max(list).doubleValue();
-        double min = Collections.min(list).doubleValue();
-        double middle = (max + min) / 2;
-        double second = (min + middle) / 2;
-        double fourth = (middle + max) / 2;
+        double max = getMax(list);
+        double min = getMin(list);
+        double middle = Double.valueOf(df.format((max + min) / 2));
+        double second = Double.valueOf(df.format((min + middle) / 2));
+        double fourth = Double.valueOf(df.format((middle + max) / 2));
         values.add(max);
-        values.add(min);
+        values.add(fourth);
         values.add(middle);
         values.add(second);
-        values.add(fourth);
-        return values;
-    }
-
-    private ArrayList<Double> getDBLabels(ArrayList<Double> list) {
-        ArrayList<Double> values = new ArrayList<Double>();
-        double max = Collections.max(list);
-        double min = Collections.min(list);
-        double middle = (max + min) / 2;
-        double second = (min + middle) / 2;
-        double fourth = (middle + max) / 2;
-        values.add(max);
         values.add(min);
-        values.add(middle);
-        values.add(second);
-        values.add(fourth);
         return values;
-    }
-
-    private ArrayList<String> getStringLabels(ArrayList<String> list) {
-        int size = list.size();
-
-        return list;
     }
 
     @Override
@@ -165,6 +84,7 @@ public class Vis extends JPanel {
         final int h = getHeight();
         final int w = getWidth();
 
+        // DRAW VERTICAL BAR LINES
         int numAxes = axes.size();
         lines.clear();
         int i = 0;
@@ -174,6 +94,7 @@ public class Vis extends JPanel {
             String columnName = a.columnName;
             int columnNameWidth = g.getFontMetrics().stringWidth(columnName);
             int xPos = (int) ((i + 1) * buffer);
+            System.out.println("XPOS first: " + xPos);
             int yPos = h;
             Line2D verticalLine = a.setGeometry(xPos, yPos - bottomMargin);
             verticalLines.add(verticalLine);
@@ -182,23 +103,63 @@ public class Vis extends JPanel {
             i++;
         }
 
-        getColumnData(g);
-
+        // DRAW LABELS ON VERTICAL LINES
         g.setColor(Color.RED);
-        for (int x = 0; x < 5; x++) {
-            var polyline = new Polyline();
-            for (int j = 0; j < numAxes; j++) {
-                Point2D p = axes.get(j).getPointAt(i);
-                polyline.addPoint(p);
-                lines.add(polyline);
+        i = 0;
+        for (Axis a : axes) {
+            a.addRelativeData();
+
+            if (a.relativeData.size() > 0) {
+                Polyline pl = new Polyline();
+                var ySpacing = h / (5 + 1);
+                ArrayList<Double> labels = getDoubleLabels(a.data);
+                System.out.println("COLUMN Name: " + a.columnName);
+                System.out.println(labels.get(0));
+                System.out.println(labels.get(1));
+                System.out.println(labels.get(2));
+                System.out.println(labels.get(3));
+                System.out.println(labels.get(4));
+                for (int j = 0; j < labels.size(); j++) {
+                    int yPos = ySpacing * (j + 1);
+                    double buffer = w / (numAxes + 1);
+                    int xPos = (int) ((i + 1) * buffer);
+                    System.out.println("xPos: " + xPos);
+                    System.out.println("yPos: " + yPos);
+                    Point2D p = axes.get(j).getPointAt(xPos, yPos);
+                    System.out.println("D: " + labels.get(j));
+                    String label = labels.get(j).toString();
+                    g.drawString(label, xPos + 5, yPos);
+                    pl.addPoint(p);
+                    lines.add(pl);
+                }
+                for (var line : lines) {
+                    line.draw(g);
+                }
+                i++;
+            } else {
+                // LOOP Through all distinct values
+                Polyline pl = new Polyline();
+                var ySpacing = h / (a.data.size() + 1);
+                System.out.println("Column Name: " + a.columnName);
+                for (int j = 0; j < a.data.size(); j++) {
+                    int yPos = ySpacing * (j + 1);
+                    double buffer = w / (numAxes + 1);
+                    int xPos = (int) ((i + 1) * buffer);
+                    // System.out.println("xPos: " + xPos);
+                    // System.out.println("yPos: " + yPos);
+                    Point2D p = axes.get(j).getPointAt(xPos, yPos);
+                    // System.out.println("D: " + a.data.get(j));
+                    String s = a.data.get(j).toString();
+                    g.drawString(s, xPos + 5, yPos);
+                    pl.addPoint(p);
+                    lines.add(pl);
+                }
+                for (var line : lines) {
+                    line.draw(g);
+                }
+                i++;
             }
         }
-        for (var line : lines) {
-            line.draw(g);
-        }
-
-        // Draw points and values on vertical lines
-        g.setColor(Color.RED);
 
     }
 
