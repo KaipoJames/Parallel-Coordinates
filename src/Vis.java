@@ -113,12 +113,6 @@ public class Vis extends JPanel {
                 Polyline pl = new Polyline();
                 var ySpacing = h / (5 + 1);
                 ArrayList<Double> labels = getDoubleLabels(a.data);
-                System.out.println("COLUMN Name: " + a.columnName);
-                System.out.println(labels.get(0));
-                System.out.println(labels.get(1));
-                System.out.println(labels.get(2));
-                System.out.println(labels.get(3));
-                System.out.println(labels.get(4));
                 for (int j = 0; j < labels.size(); j++) {
                     int yPos = ySpacing * (j + 1);
                     double buffer = w / (numAxes + 1);
@@ -129,13 +123,23 @@ public class Vis extends JPanel {
                     System.out.println("D: " + labels.get(j));
                     String label = labels.get(j).toString();
                     g.drawString(label, xPos + 5, yPos);
-                    pl.addPoint(p);
-                    lines.add(pl);
                 }
+                i++;
+
+                // Draw Lines
+                for (int k = 0; k < labels.size(); k++) {
+                    double buffer = w / (numAxes + 1);
+                    int xPos = (int) ((k + 1) * buffer);
+                    double rel = a.relativeData.get(k);
+                    int rd = (int) rel;
+                    int yPos = h - rd * h;
+                    Point2D po = axes.get(k).getPointAt(xPos, yPos);
+                    pl.addPoint(po);
+                }
+                lines.add(pl);
                 for (var line : lines) {
                     line.draw(g);
                 }
-                i++;
             } else {
                 // LOOP Through all distinct values
                 Polyline pl = new Polyline();
@@ -151,14 +155,28 @@ public class Vis extends JPanel {
                     // System.out.println("D: " + a.data.get(j));
                     String s = a.data.get(j).toString();
                     g.drawString(s, xPos + 5, yPos);
-                    pl.addPoint(p);
-                    lines.add(pl);
                 }
+                i++;
+
+                // Draw Lines
+                for (int k = 0; k < numAxes; k++) {
+                    double buffer = w / (numAxes + 1);
+                    int xPos = (int) ((k + 1) * buffer);
+                    int yPos = ySpacing * (k + 1);
+                    Point2D po = axes.get(k).getPointAt(xPos, yPos);
+                    pl.addPoint(po);
+                }
+                lines.add(pl);
                 for (var line : lines) {
                     line.draw(g);
                 }
-                i++;
             }
+        }
+
+        for (var line : lines) {
+            System.out.println("size: " + lines.size());
+            System.out.println("X Coord: " + line.points.get(0));
+            System.out.println("Y Coord: " + line.points.get(1));
         }
 
     }

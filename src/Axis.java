@@ -47,6 +47,11 @@ public class Axis {
         g.draw(geometry);
     }
 
+    public Point2D.Double getPointAt(int i) {
+        double y = Math.random() * (geometry.y2 - geometry.y1);
+        return new Point2D.Double(geometry.x1, y);
+    }
+
     public Point2D.Double getPointAt(int xPos, int yPos) {
         double y = yPos;
         // double y = yPos * (geometry.y2 - geometry.y1);

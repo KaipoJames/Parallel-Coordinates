@@ -50,7 +50,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setTitle("Parallel Coordinates: cis2012");
-                performAllQuery("SELECT * FROM cis2012");
+                performAllQuery("SELECT * FROM cis2012", "SELECT Count(*) FROM cis2012");
                 mainPanel.setAxes(axes);
             }
         });
@@ -58,7 +58,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setTitle("Parallel Coordinates: cis2019");
-                performAllQuery("SELECT * FROM cis2019");
+                performAllQuery("SELECT * FROM cis2019", "SELECT Count(*) FROM cis2012");
                 mainPanel.setAxes(axes);
             }
         });
@@ -71,7 +71,19 @@ public class App {
         return menuBar;
     }
 
-    private void performAllQuery(String q) {
+    // private void getRowCount(String q) {
+    // try {
+    // Connection c = DriverManager.getConnection(url, user, password);
+    // Statement s = c.createStatement();
+    // ResultSet rs = s.executeQuery(q);
+    // System.out.println("COUNT: " + rs);
+    // } catch (SQLException e) {
+    // System.out.println("could not connect to Postgres!");
+    // }
+    // // return results;
+    // }
+
+    private void performAllQuery(String q, String count) {
         // List<Point2D> results = new ArrayList<>();
         try {
             axes.clear();
@@ -80,6 +92,7 @@ public class App {
             ResultSet rs = s.executeQuery(q);
             ResultSetMetaData md = rs.getMetaData();
             int numColumns = md.getColumnCount();
+            // getRowCount(count);
             for (int i = 1; i <= numColumns; i++) {
                 Axis seth = new Axis(md.getColumnName(i), md.getColumnTypeName(i));
                 axes.add(seth);

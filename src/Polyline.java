@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Polyline implements Serializable, Comparable<Polyline> {
     private GeneralPath polygon;
-    private List<Point2D> points;
+    public List<Point2D> points;
 
     private enum State {
         NORMAL, HIGHLIGHTED, INVISIBLE
@@ -38,6 +38,7 @@ public class Polyline implements Serializable, Comparable<Polyline> {
         if (points.isEmpty()) {
             polygon.moveTo(x, y);
         } else {
+            System.out.println("addPoint method. Point = " + x + " , " + y);
             polygon.lineTo(x, y);
         }
         points.add(new Point2D.Double(x, y));
